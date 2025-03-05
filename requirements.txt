@@ -1,0 +1,15 @@
+certifi==2024.7.4
+distlib==0.3.8
+filelock==3.15.4
+IMAPClient==3.0.1
+numpy==2.2.2
+pandas==2.2.3
+pipenv==2024.0.1
+platformdirs==4.2.2
+python-dateutil==2.9.0.post0
+pytz==2024.2
+setuptools==71.1.0
+six==1.17.0
+tzdata==2025.1
+virtualenv==20.26.3
+wheel==0.43.0
