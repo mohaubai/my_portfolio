@@ -13,3 +13,5 @@ six==1.17.0
 tzdata==2025.1
 virtualenv==20.26.3
 wheel==0.43.0
+flask
+gunicorn
