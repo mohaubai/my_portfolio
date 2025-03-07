@@ -1,6 +1,23 @@
 from flask import Flask, render_template, request
+import sqlite3
+
 
 app = Flask(__name__)
+
+def create_database():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            message TEXT NOT NULL           
+        )
+""")
+    
+    conn.commit()
+    conn.close()
 
 @app.route('/')
 def home():
@@ -21,8 +38,30 @@ def contact():
         user_name = request.form['name']
         user_message = request.form['message']
 
-        return f'<h1>Thank You, {user_name}!</h1><p>Your Message: {user_message}</p>'
+        if not user_name or not user_message:
+            return "Error: Both Name and message are required"
+        
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO messages (name, message) VALUES (?, ?)", (user_name, user_message))
+        conn.commit()
+        conn.close()
+
+        return f"<h1>Thank You, {user_name}!</h1><p>Your Message has been saved.</p>"
+    
     return render_template('contact.html')
 
+@app.route('/messages')
+def show_messages():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT name, message FROM messages")
+    all_messages = cursor.fetchall()
+    conn.close()
+
+    return render_template('messages.html', messages=all_messages)
+
+create_database()
 if __name__ == '__main__':
     app.run(debug=True)
